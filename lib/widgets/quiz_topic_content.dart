@@ -27,7 +27,7 @@ class QuizTopicWidget extends StatelessWidget {
           margin: EdgeInsets.symmetric(vertical: 3),
           padding: EdgeInsets.all(16.0),
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 189, 145, 25),
+            color: Colors.orange.shade100,
             borderRadius: BorderRadius.circular(10.0),
           ),
           child: Row(
@@ -60,7 +60,7 @@ class QuizTopicWidget extends StatelessWidget {
                     Text(
                       topic,
                       style: TextStyle(
-                        color: Colors.white,
+                        color: const Color.fromARGB(255, 0, 0, 0),
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
                       ),
@@ -72,7 +72,7 @@ class QuizTopicWidget extends StatelessWidget {
                         return Chip(
                           label: Text(
                             level,
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
                           ),
                           backgroundColor: Colors.green,
                         );
@@ -91,7 +91,7 @@ class QuizTopicWidget extends StatelessWidget {
                     Text(
                       'Questions: $numberOfQuestions',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: const Color.fromARGB(255, 0, 0, 0),
                         fontSize: 14,
                       ),
                     ),
@@ -99,7 +99,7 @@ class QuizTopicWidget extends StatelessWidget {
                     Text(
                       'Pass Marks: ${passMarksPercentage.toStringAsFixed(1)}%',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: const Color.fromARGB(255, 0, 0, 0),
                         fontSize: 14,
                       ),
                     ),

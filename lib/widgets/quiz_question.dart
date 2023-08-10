@@ -1,23 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../store/quiz.dart';
+import './quiz_tab.dart';
 
 class QuizQuestionWidget extends StatefulWidget {
-  final String question;
-  final List<String> options;
-  final Function(int) onOptionSelected;
-  final bool isLastQuestion;
-  final String topicData;
-  final Function() onNextQuestion; // Add this callback function
-  final int currentQuestionIndex; // Add this property
+  final String topic;
 
-  QuizQuestionWidget({
-    required this.question,
-    required this.options,
-    required this.onOptionSelected,
-    required this.isLastQuestion,
-    required this.topicData,
-    required this.onNextQuestion, // Pass the callback function to the constructor
-    required this.currentQuestionIndex, // Pass the current question index to the constructor
-  });
+  QuizQuestionWidget({required this.topic});
 
   @override
   _QuizQuestionWidgetState createState() => _QuizQuestionWidgetState();
@@ -28,6 +17,62 @@ class _QuizQuestionWidgetState extends State<QuizQuestionWidget> {
 
   @override
   Widget build(BuildContext context) {
+    return Consumer<QuizStore>(
+      builder: (context, quizStore, _) {
+        Map<String, dynamic> questionData =
+            quizStore.getQuestionAndOptionsForTopic(widget.topic);
+        String question = questionData['question'];
+        List<String> options = questionData['options'];
+        bool isLastQuestion = questionData['isLastQuestion'];
+        int total = questionData['total'];
+
+        return _QuizQuestionContent(
+          topic: widget.topic,
+          question: question,
+          options: options,
+          total: total,
+          isLastQuestion: isLastQuestion,
+          onOptionSelected: (index) {
+            // Handle option selected logic here
+          },
+          onNextQuestion: () {
+            // Handle next question logic here
+          },
+        );
+      },
+    );
+  }
+}
+
+class _QuizQuestionContent extends StatefulWidget {
+  final String topic;
+  final String question;
+  final int total;
+  final List<String> options;
+  final Function(int) onOptionSelected;
+  final bool isLastQuestion;
+  final Function() onNextQuestion;
+
+  _QuizQuestionContent({
+    required this.topic,
+    required this.question,
+    required this.options,
+    required this.onOptionSelected,
+    required this.isLastQuestion,
+    required this.onNextQuestion,
+    required this.total,
+  });
+
+  @override
+  _QuizQuestionContentState createState() => _QuizQuestionContentState();
+}
+
+class _QuizQuestionContentState extends State<_QuizQuestionContent> {
+  int? selectedOptionIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    QuizStore quizStore = Provider.of<QuizStore>(context);
     return Center(
       child: Card(
         margin: EdgeInsets.all(4),
@@ -37,14 +82,32 @@ class _QuizQuestionWidgetState extends State<QuizQuestionWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              Container(
+                padding: EdgeInsets.all(8.0), // Padding for the container
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 78, 70, 57),
+                  borderRadius:
+                      BorderRadius.circular(8.0), // Border radius here
+                ),
+                child: Text(
+                  "Quiz on ${widget.topic}",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 255, 254, 250),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              SizedBox(height: 40),
               Text(
-                "${widget.topicData} Question",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                "Total Question - ${widget.total}",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 30),
               Text(
-                widget.question,
+                "${quizStore.currentQuestionIndex + 1}. ${widget.question}",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 10),
@@ -56,14 +119,16 @@ class _QuizQuestionWidgetState extends State<QuizQuestionWidget> {
                     selectedOptionIndex = index;
                   }),
                   child: Container(
+                    margin: const EdgeInsets.symmetric(vertical: 8),
                     padding: const EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 16),
+                        vertical: 14, horizontal: 20),
                     decoration: BoxDecoration(
                       color: selectedOptionIndex == index
-                          ? Colors.blue
+                          ? Color.fromARGB(255, 78, 70, 57)
                           : Colors.white,
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.blue),
+                      border:
+                          Border.all(color: Color.fromARGB(255, 78, 70, 57)),
                     ),
                     child: Text(
                       option,
@@ -83,25 +148,30 @@ class _QuizQuestionWidgetState extends State<QuizQuestionWidget> {
                   if (selectedOptionIndex != null) {
                     widget.onOptionSelected(selectedOptionIndex!);
                     if (!widget.isLastQuestion) {
-                      // Trigger the onNextQuestion callback to navigate to the next question
-                      widget.onNextQuestion();
-                      selectedOptionIndex = null; // Reset selected option for the next question
+                      print('next question');
+                      quizStore.nextQuestion();
+                      selectedOptionIndex = null;
                     } else {
-                      // Handle quiz finished logic
                       print("Quiz Finished!");
+                      quizStore.onFinish();
+                      Navigator.pop(context);
                     }
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 16,
+                    horizontal: 32,
+                  ),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)),
-                  primary: Colors.blue,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  primary: Colors.orange,
                 ),
                 child: Text(
                   widget.isLastQuestion ? "Finish" : "Next",
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                  style: TextStyle(
+                      fontSize: 18, color: const Color.fromARGB(255, 0, 0, 0)),
                 ),
               ),
             ],

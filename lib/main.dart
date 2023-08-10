@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'pages/signup_page.dart';
 import 'pages/login_page.dart';
+import './store/quiz.dart';
 
+// void main() {
+//   runApp(const QuizApp());
+// }
 void main() {
-  runApp(const QuizApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => QuizStore(), // Provide an instance of QuizStore
+      child: QuizApp(),
+    ),
+  );
 }
 
 class QuizApp extends StatelessWidget {
@@ -12,11 +22,15 @@ class QuizApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-       theme: ThemeData(
+      theme: ThemeData(
         // Change the primarySwatch to a green shade
         primarySwatch: Colors.orange,
       ),
-      home: LoginPage(), // Uncomment this line to set LoginPage as the initial screen.
+      home: LoginPage()
+      // ChangeNotifierProvider<QuizStore>(
+      //   create: (context) => QuizStore(), // Provide an instance of QuizStore
+      //   child: LoginPage(),
+      //         ), // Uncomment this line to set LoginPage as the initial screen.
     );
   }
 }

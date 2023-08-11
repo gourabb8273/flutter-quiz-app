@@ -6,25 +6,25 @@ class QuizTopicWidget extends StatelessWidget {
   final int numberOfQuestions;
   final List<String> difficultyLevels;
   final int passMarksPercentage;
-  final String logoPath; // Add logoPath property
+  final String logoPath;
 
   QuizTopicWidget({
     required this.topic,
     required this.numberOfQuestions,
     required this.difficultyLevels,
     required this.passMarksPercentage,
-    required this.logoPath, // Add logoPath to the constructor
+    required this.logoPath,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      // onTap: () => navigateToQuizQuestion(context), // Add this line
+      // onTap: () => navigateToQuizQuestion(context),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 14.0),
+        padding: EdgeInsets.symmetric(horizontal: 14.0, vertical: 3),
         child: Container(
           width: 250,
-          margin: EdgeInsets.symmetric(vertical: 3),
+          margin: EdgeInsets.symmetric(vertical: 1),
           padding: EdgeInsets.all(16.0),
           decoration: BoxDecoration(
             color: Colors.orange.shade100,
@@ -33,9 +33,8 @@ class QuizTopicWidget extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Logo with Border Radius
               Padding(
-                padding: EdgeInsets.all(5.0), // Add padding here
+                padding: EdgeInsets.all(8.0),
                 child: Container(
                   width: 70,
                   height: 75,
@@ -52,11 +51,9 @@ class QuizTopicWidget extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 16),
-              // Topic and Difficulty Levels
               Expanded(
                 child: Container(
-                  margin: EdgeInsets.only(
-                      top: 30), // Adjust the margin value as needed
+                  margin: EdgeInsets.only(top: 30),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -72,12 +69,9 @@ class QuizTopicWidget extends StatelessWidget {
                   ),
                 ),
               ),
-
               SizedBox(height: 8),
-              // Number of Questions and Pass Marks Percentage
               Padding(
-                padding: EdgeInsets.only(
-                    top: 8.0), // Add the desired top margin here
+                padding: EdgeInsets.only(top: 8.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [

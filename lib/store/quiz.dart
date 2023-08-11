@@ -79,8 +79,7 @@ List<Map<String, dynamic>> quizQuestions = [
         'question': 'How many node objects methods are available?',
         'options': ['21', '20', '19', '18'],
         'correctOptionIndex': 4
-      },
-      // Add more questions for Node.js
+      },     
     ],
   },
   {
@@ -144,8 +143,7 @@ List<Map<String, dynamic>> quizQuestions = [
             'Which of the following method refers to the parent class in React.js?',
         'options': ['inherits()', 'self()', 'super()', 'this()'],
         'correctOptionIndex': 3
-      },
-      // Add more questions for React
+      },     
     ],
   },
   {
@@ -215,10 +213,9 @@ List<Map<String, dynamic>> quizQuestions = [
           'Amazon Redshift',
         ],
         'correctOptionIndex': 2,
-      },
-      // Add more questions for AWS
+      },  
     ],
-  }, // Add more topics and their questions
+  }, 
   {
     'topic': 'JavaScript',
     'questions': [
@@ -286,7 +283,6 @@ List<Map<String, dynamic>> quizQuestions = [
         ],
         'correctOptionIndex': 4,
       },
-      // Add more questions for JavaScript
     ],
   },
   {
@@ -356,7 +352,6 @@ List<Map<String, dynamic>> quizQuestions = [
         ],
         'correctOptionIndex': 4,
       },
-      // Add more questions for Flutter
     ],
   },
   {

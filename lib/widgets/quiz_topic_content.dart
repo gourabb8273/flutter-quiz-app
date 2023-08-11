@@ -21,7 +21,7 @@ class QuizTopicWidget extends StatelessWidget {
     return GestureDetector(
       // onTap: () => navigateToQuizQuestion(context), // Add this line
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        padding: EdgeInsets.symmetric(horizontal: 14.0),
         child: Container(
           width: 250,
           margin: EdgeInsets.symmetric(vertical: 3),
@@ -54,40 +54,41 @@ class QuizTopicWidget extends StatelessWidget {
               SizedBox(width: 16),
               // Topic and Difficulty Levels
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      topic,
-                      style: TextStyle(
-                        color: const Color.fromARGB(255, 0, 0, 0),
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
+                child: Container(
+                  margin: EdgeInsets.only(
+                      top: 30), // Adjust the margin value as needed
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        topic,
+                        style: TextStyle(
+                          color: const Color.fromARGB(255, 0, 0, 0),
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    Wrap(
-                      spacing: 8.0,
-                      runSpacing: 4.0,
-                      children: difficultyLevels.map((level) {
-                        return Chip(
-                          label: Text(
-                            level,
-                            style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
-                          ),
-                          backgroundColor: Colors.green,
-                        );
-                      }).toList(),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
+
               SizedBox(height: 8),
               // Number of Questions and Pass Marks Percentage
               Padding(
-                padding: EdgeInsets.only(top: 8.0), // Add the desired top margin here
+                padding: EdgeInsets.only(
+                    top: 8.0), // Add the desired top margin here
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
+                    Text(
+                      'Pass Marks: ${passMarksPercentage.toStringAsFixed(1)}%',
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 14,
+                      ),
+                    ),
+                    SizedBox(height: 4),
                     Text(
                       'Questions: $numberOfQuestions',
                       style: TextStyle(
@@ -95,13 +96,21 @@ class QuizTopicWidget extends StatelessWidget {
                         fontSize: 14,
                       ),
                     ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Pass Marks: ${passMarksPercentage.toStringAsFixed(1)}%',
-                      style: TextStyle(
-                        color: const Color.fromARGB(255, 0, 0, 0),
-                        fontSize: 14,
-                      ),
+                    SizedBox(height: 6),
+                    Wrap(
+                      spacing: 8.0,
+                      runSpacing: 4.0,
+                      children: difficultyLevels.map((level) {
+                        return Chip(
+                          label: Text(
+                            level,
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 255, 255, 255)),
+                          ),
+                          backgroundColor:
+                              const Color.fromARGB(255, 46, 146, 49),
+                        );
+                      }).toList(),
                     ),
                   ],
                 ),
@@ -112,24 +121,4 @@ class QuizTopicWidget extends StatelessWidget {
       ),
     );
   }
-
-  // New function to navigate to the quiz question page
-  // void navigateToQuizQuestion(BuildContext context) {
-  //   print(context);
-  //   // You can use Navigator.push() here to navigate to the quiz question page
-  //   // Replace the below code with your actual implementation for navigating
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => QuizQuestionWidget(
-  //         question: 'Sample Question',
-  //         options: ['Option A', 'Option B', 'Option C', 'Option D'],
-  //         isLastQuestion: false,
-  //         onOptionSelected: (index) {
-  //           // Handle option selected logic here
-  //         },
-  //       ),
-  //     ),
-  //   );
-  // }
 }

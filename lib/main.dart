@@ -22,16 +22,16 @@ class QuizApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        // Change the primarySwatch to a green shade
-        primarySwatch: Colors.orange,
-      ),
-      home: LoginPage()
-      // ChangeNotifierProvider<QuizStore>(
-      //   create: (context) => QuizStore(), // Provide an instance of QuizStore
-      //   child: LoginPage(),
-      //         ), // Uncomment this line to set LoginPage as the initial screen.
-    );
+        theme: ThemeData(
+          // Change the primarySwatch to a green shade
+          primarySwatch: Colors.orange,
+        ),
+        home: LoginPage()
+        // ChangeNotifierProvider<QuizStore>(
+        //   create: (context) => QuizStore(), // Provide an instance of QuizStore
+        //   child: LoginPage(),
+        //         ), // Uncomment this line to set LoginPage as the initial screen.
+        );
   }
 }
 

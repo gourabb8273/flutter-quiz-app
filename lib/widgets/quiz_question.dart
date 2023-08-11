@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../store/quiz.dart';
 import './quiz_tab.dart';
+import 'package:intl/intl.dart';
 
 class QuizQuestionWidget extends StatefulWidget {
   final String topic;
@@ -25,13 +26,17 @@ class _QuizQuestionWidgetState extends State<QuizQuestionWidget> {
         List<String> options = questionData['options'];
         bool isLastQuestion = questionData['isLastQuestion'];
         int total = questionData['total'];
+        int correctOptionIndex = questionData['correctOptionIndex'];
+        int passMarksPercentage = questionData['passMarksPercentage'];
 
         return _QuizQuestionContent(
           topic: widget.topic,
           question: question,
           options: options,
           total: total,
+          correctOptionIndex: correctOptionIndex,
           isLastQuestion: isLastQuestion,
+          passMarksPercentage: passMarksPercentage,
           onOptionSelected: (index) {
             // Handle option selected logic here
           },
@@ -51,7 +56,9 @@ class _QuizQuestionContent extends StatefulWidget {
   final List<String> options;
   final Function(int) onOptionSelected;
   final bool isLastQuestion;
+  final int correctOptionIndex;
   final Function() onNextQuestion;
+  final int passMarksPercentage;
 
   _QuizQuestionContent({
     required this.topic,
@@ -61,6 +68,8 @@ class _QuizQuestionContent extends StatefulWidget {
     required this.isLastQuestion,
     required this.onNextQuestion,
     required this.total,
+    required this.correctOptionIndex,
+    required this.passMarksPercentage,
   });
 
   @override
@@ -69,6 +78,7 @@ class _QuizQuestionContent extends StatefulWidget {
 
 class _QuizQuestionContentState extends State<_QuizQuestionContent> {
   int? selectedOptionIndex;
+  int totalMarks = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -147,13 +157,26 @@ class _QuizQuestionContentState extends State<_QuizQuestionContent> {
                 onPressed: () {
                   if (selectedOptionIndex != null) {
                     widget.onOptionSelected(selectedOptionIndex!);
+                    //  widget.onOptionSelected(selectedOptionIndex!);
+                    // Update total marks when an option is selected
+                    if (selectedOptionIndex == widget.correctOptionIndex - 1) {
+                      totalMarks += 1;
+                    }
                     if (!widget.isLastQuestion) {
-                      print('next question');
                       quizStore.nextQuestion();
                       selectedOptionIndex = null;
                     } else {
-                      print("Quiz Finished!");
-                      quizStore.onFinish();
+                      String currentDate =
+                          DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now());
+                      quizStore.onFinish();                   
+                      quizStore.addResponse({
+                        'topic': widget.topic,
+                        'percentage': (totalMarks / widget.total * 100)
+                            .toStringAsFixed(2),
+                        'date': currentDate,
+                        'isPass': widget.passMarksPercentage <=
+                            (totalMarks / widget.total * 100),
+                      });
                       Navigator.pop(context);
                     }
                   }

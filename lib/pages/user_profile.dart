@@ -29,7 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 color: Colors.orange,
               ),
               child: Container(
-                margin: EdgeInsets.only(top: 30.0),
+                margin: EdgeInsets.only(top: 30.0, left: 20.0),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

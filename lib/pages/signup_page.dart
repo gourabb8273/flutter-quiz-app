@@ -3,22 +3,28 @@ import 'package:provider/provider.dart';
 import '../store/user.dart';
 import './login_page.dart';
 
-class SignupPage extends StatelessWidget {
+class SignupPage extends StatefulWidget {
+  @override
+  _SignupPageState createState() => _SignupPageState();
+}
+
+class _SignupPageState extends State<SignupPage> {
+  bool isPasswordVisible = false;
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController mobileController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     UserStore userStore = Provider.of<UserStore>(context);
-
-    final TextEditingController nameController = TextEditingController();
-    final TextEditingController emailController = TextEditingController();
-    final TextEditingController mobileController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
 
     String? validateEmail(String? value) {
       if (value == null || value.isEmpty) {
         return 'Email is required';
       }
 
-      // Regular expression to validate email address
       final emailRegExp =
           RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
 
@@ -34,11 +40,22 @@ class SignupPage extends StatelessWidget {
         return 'Mobile number is required';
       }
 
-      // Regular expression to validate mobile number
       final mobileRegExp = RegExp(r'^\+?[0-9]{8,}$');
 
       if (!mobileRegExp.hasMatch(value)) {
         return 'Invalid mobile number';
+      }
+
+      return null;
+    }
+
+    String? validatePassword(String? value) {
+      if (value == null || value.isEmpty) {
+        return 'Password is required';
+      }
+
+      if (value.length < 6) {
+        return 'Password must be 6 characters or more';
       }
 
       return null;
@@ -50,7 +67,7 @@ class SignupPage extends StatelessWidget {
         centerTitle: true,
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(30.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -78,12 +95,23 @@ class SignupPage extends StatelessWidget {
               validator: validateMobile,
             ),
             SizedBox(height: 16.0),
-            TextField(
+            TextFormField(
               controller: passwordController,
               decoration: InputDecoration(
                 labelText: 'Password',
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      isPasswordVisible = !isPasswordVisible;
+                    });
+                  },
+                ),
               ),
-              obscureText: true,
+              obscureText: !isPasswordVisible,
+              validator: validatePassword,
             ),
             SizedBox(height: 16.0),
             ElevatedButton(
@@ -93,8 +121,64 @@ class SignupPage extends StatelessWidget {
                 String mobile = mobileController.text;
                 String password = passwordController.text;
 
-                if (validateEmail(email) == null &&
-                    validateMobile(mobile) == null) {
+                if (validatePassword(email) != null) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('Invalid email Id'),
+                        content: Text('Please enter a valid email'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                } else if (validatePassword(mobile) != null) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('Invalid mobile number'),
+                        content: Text('Please enter a valid mobile number'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                } else if (validatePassword(password) != null) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('Password is weak'),
+                        content: Text(
+                            'Please enter a valid strong 6 or more char password'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                } else if (validateEmail(email) == null &&
+                    validateMobile(mobile) == null &&
+                    validatePassword(password) == null) {
                   userStore.register(name, email, mobile, password);
 
                   // Clear the text fields
@@ -103,7 +187,6 @@ class SignupPage extends StatelessWidget {
                   mobileController.clear();
                   passwordController.clear();
 
-                  // Show success popup
                   showDialog(
                     context: context,
                     builder: (context) {
@@ -115,32 +198,11 @@ class SignupPage extends StatelessWidget {
                           TextButton(
                             onPressed: () {
                               Navigator.pop(context);
-                              // Navigate to login page
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => LoginPage()),
                               );
-                            },
-                            child: Text('OK'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                } else {
-                  // Show an error message for invalid email or mobile
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text('Invalid Input'),
-                        content:
-                            Text('Please enter valid email and mobile number.'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
                             },
                             child: Text('OK'),
                           ),

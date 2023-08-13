@@ -12,6 +12,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  
+  bool _isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +41,20 @@ class _LoginPageState extends State<LoginPage> {
               controller: _passwordController,
               decoration: InputDecoration(
                 labelText: 'Password',
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isPasswordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isPasswordVisible = !_isPasswordVisible;
+                    });
+                  },
+                ),
               ),
-              obscureText: true,
+              obscureText: !_isPasswordVisible,
             ),
             SizedBox(height: 16.0),
             ElevatedButton(
@@ -65,13 +79,13 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _handleLogin(UserStore userStore) {
+  void _handleLogin(UserStore userStore) async {
     // Get the entered email and password from the text controllers
     String enteredEmail = _emailController.text.trim();
     String enteredPassword = _passwordController.text.trim();
 
     // Check if the entered email and password match a registered user
-    if (userStore.login(enteredEmail, enteredPassword)) {
+    if (await userStore.login(enteredEmail, enteredPassword)) {
       // Successful login, navigate to the home page.
       Navigator.pushReplacement(
         context,

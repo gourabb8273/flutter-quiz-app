@@ -37,12 +37,6 @@ class _QuizQuestionWidgetState extends State<QuizQuestionWidget> {
           correctOptionIndex: correctOptionIndex,
           isLastQuestion: isLastQuestion,
           passMarksPercentage: passMarksPercentage,
-          onOptionSelected: (index) {
-            // Handle option selected logic here
-          },
-          onNextQuestion: () {
-            // Handle next question logic here
-          },
         );
       },
     );
@@ -54,19 +48,15 @@ class _QuizQuestionContent extends StatefulWidget {
   final String question;
   final int total;
   final List<String> options;
-  final Function(int) onOptionSelected;
   final bool isLastQuestion;
   final int correctOptionIndex;
-  final Function() onNextQuestion;
   final int passMarksPercentage;
 
   _QuizQuestionContent({
     required this.topic,
     required this.question,
     required this.options,
-    required this.onOptionSelected,
     required this.isLastQuestion,
-    required this.onNextQuestion,
     required this.total,
     required this.correctOptionIndex,
     required this.passMarksPercentage,
@@ -93,11 +83,11 @@ class _QuizQuestionContentState extends State<_QuizQuestionContent> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Container(
-                padding: EdgeInsets.all(8.0), // Padding for the container
+                padding: EdgeInsets.all(8.0), 
                 decoration: BoxDecoration(
                   color: Color.fromARGB(255, 78, 70, 57),
                   borderRadius:
-                      BorderRadius.circular(8.0), // Border radius here
+                      BorderRadius.circular(8.0), 
                 ),
                 child: Text(
                   "Quiz on ${widget.topic}",
@@ -155,10 +145,7 @@ class _QuizQuestionContentState extends State<_QuizQuestionContent> {
               SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
-                  if (selectedOptionIndex != null) {
-                    widget.onOptionSelected(selectedOptionIndex!);
-                    //  widget.onOptionSelected(selectedOptionIndex!);
-                    // Update total marks when an option is selected
+                  if (selectedOptionIndex != null) {                
                     if (selectedOptionIndex == widget.correctOptionIndex - 1) {
                       totalMarks += 1;
                     }

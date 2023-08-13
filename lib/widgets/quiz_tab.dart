@@ -53,12 +53,12 @@ class _QuizTabState extends State<QuizTab> {
               'Are you sure you want to start the quiz for ${topicData['topic']}?'),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context), // Close the dialog
+              onPressed: () => Navigator.pop(context),
               child: Text('No'),
             ),
             TextButton(
               onPressed: () {
-                Navigator.pop(context); // Close the dialog
+                Navigator.pop(context);
                 _navigateToQuizQuestion(context, topicData, quizStore);
               },
               child: Text('Yes'),
@@ -76,8 +76,6 @@ class _QuizTabState extends State<QuizTab> {
       MaterialPageRoute(
         builder: (context) => QuizQuestionWidget(
           topic: topicData['topic'],
-          // passMarksPercentage: 65,
-          //topicData['passMarksPercentage']
         ),
       ),
     );

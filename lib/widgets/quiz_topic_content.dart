@@ -18,8 +18,7 @@ class QuizTopicWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      // onTap: () => navigateToQuizQuestion(context),
+    return GestureDetector(    
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 14.0, vertical: 3),
         child: Container(

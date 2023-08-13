@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:quiz_app/pages/login_page.dart';
 import 'login_page.dart';
 import 'home_page.dart';
+import '../store/user.dart'; 
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -9,12 +11,10 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  String _userName = 'John Doe';
-  String _userEmail = 'johndoe@example.com';
-  String _userMobile = '+1 123-456-7890';
-
   @override
   Widget build(BuildContext context) {
+    UserStore userStore = Provider.of<UserStore>(context); 
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Welcome to Quiz App'),
@@ -28,61 +28,69 @@ class _ProfilePageState extends State<ProfilePage> {
               decoration: BoxDecoration(
                 color: Colors.orange,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CircleAvatar(
-                    radius: 35.0,
-                    backgroundImage: AssetImage('assets/profile.jpg'), // Replace this with the actual profile picture
-                  ),
-                  SizedBox(height: 8.0),
-                  Text(
-                    _userName,
-                    style: TextStyle(
-                      color: const Color.fromARGB(255, 0, 0, 0),
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
+              child: Container(
+                margin: EdgeInsets.only(top: 30.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      radius: 35.0,
+                      backgroundImage: AssetImage('assets/profile.jpg'),
                     ),
-                  ),
-                  Text(
-                    _userEmail,
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 0, 0, 0),
-                      fontSize: 16.0,
+                    SizedBox(width: 16.0),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          userStore.name,
+                          style: TextStyle(
+                            color: const Color.fromARGB(255, 0, 0, 0),
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 4.0),
+                        Text(
+                          userStore.email,
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 0, 0, 0),
+                            fontSize: 16.0,
+                          ),
+                        ),
+                        SizedBox(height: 4.0),
+                        Text(
+                          userStore.mobile,
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 0, 0, 0),
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  Text(
-                    _userMobile,
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 0, 0, 0),
-                      fontSize: 16.0,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             ListTile(
               leading: Icon(Icons.contact_mail),
               title: Text('Contact Us'),
               onTap: () {
-                // TODO: Implement contact us functionality or navigate to the contact us page.
-                Navigator.pop(context); // Close the drawer after selecting an option
+                Navigator.pop(context);
               },
             ),
             ListTile(
               leading: Icon(Icons.info),
               title: Text('About Us'),
               onTap: () {
-                // TODO: Implement about us functionality or navigate to the about us page.
-                Navigator.pop(context); // Close the drawer after selecting an option
+                Navigator.pop(context);
               },
             ),
-              ListTile(
+            ListTile(
               leading: Icon(Icons.info),
               title: Text('Log Out'),
               onTap: () {
-                // TODO: Implement about us functionality or navigate to the about us page.
-                 Navigator.push(
+                userStore.logout();
+                Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => LoginPage()),
                 );

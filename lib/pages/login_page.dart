@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'signup_page.dart';
 import 'user_profile.dart';
+import '../store/user.dart'; 
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -8,16 +10,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // Hardcoded email and password
-  static const String _validEmail = 'gb';
-  static const String _validPassword = '12';
-
-  // Controller for the email and password text fields
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    UserStore userStore = Provider.of<UserStore>(context); 
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Login Page'),
@@ -46,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                _handleLogin();
+                _handleLogin(userStore); 
               },
               child: Text('Login'),
             ),
@@ -66,13 +65,13 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _handleLogin() {
+  void _handleLogin(UserStore userStore) {
     // Get the entered email and password from the text controllers
     String enteredEmail = _emailController.text.trim();
     String enteredPassword = _passwordController.text.trim();
 
-    // Check if the entered email and password match the hardcoded values
-    if (enteredEmail == _validEmail && enteredPassword == _validPassword) {
+    // Check if the entered email and password match a registered user
+    if (userStore.login(enteredEmail, enteredPassword)) {
       // Successful login, navigate to the home page.
       Navigator.pushReplacement(
         context,

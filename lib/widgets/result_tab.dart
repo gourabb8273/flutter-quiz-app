@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'quiz_topic_content.dart';
 import '../store/quiz.dart';
+
 class ResultTab extends StatelessWidget {
   final quizResponse = QuizStore().userQuizResponse;
 
@@ -8,10 +9,10 @@ class ResultTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(0), // Remove AppBar height
+        preferredSize: Size.fromHeight(0),
         child: AppBar(),
       ),
-      body: SingleChildScrollView( // Wrap the entire content in a SingleChildScrollView
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -35,7 +36,8 @@ class ResultTab extends StatelessWidget {
                           value: double.parse(details['percentage']) / 100,
                           strokeWidth: 5,
                           backgroundColor: Colors.grey.shade300,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.orange),
                         ),
                       ),
                       SizedBox(width: 16),
@@ -44,7 +46,8 @@ class ResultTab extends StatelessWidget {
                         children: [
                           Text(
                             '${details['topic']}',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                           Text(
                             'Percentage: ${details['percentage']}%',
@@ -57,11 +60,10 @@ class ResultTab extends StatelessWidget {
                         ],
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: details['isPass']
-                              ? Colors.green
-                              : Colors.red,
+                          color: details['isPass'] ? Colors.green : Colors.red,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(

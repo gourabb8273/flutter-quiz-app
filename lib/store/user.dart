@@ -43,34 +43,36 @@ class UserStore with ChangeNotifier {
     }
   }
 
-Future<bool> login(String enteredEmail, String enteredPassword) async {
-  try {
-    UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: enteredEmail,
-      password: enteredPassword,
-    );
+  Future<bool> login(String enteredEmail, String enteredPassword) async {
+    try {
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: enteredEmail,
+        password: enteredPassword,
+      );
+      // Fetch user data from Firestore based on the logged-in user's UID
+      String uid = userCredential.user?.uid ?? '';
+      DocumentSnapshot userSnapshot =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
 
-    // Fetch user data from Firestore based on the logged-in user's UID
-    String uid = userCredential.user?.uid ?? '';
-    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance.collection('users').doc(uid).get();
-
-    if (userSnapshot.exists) {
-      Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
-      _isLoggedIn = true;
-      _email = userData['email'] ?? '';
-      _name = userData['name'] ?? '';
-      _mobile = userData['mobile'] ?? '';
-      notifyListeners();
-      return true;
-    } else {
-      print("User data does not exist in Firestore for UID: $uid");
+      if (userSnapshot.exists) {
+        Map<String, dynamic> userData =
+            userSnapshot.data() as Map<String, dynamic>;
+        _isLoggedIn = true;
+        _email = userData['email'] ?? '';
+        _name = userData['name'] ?? '';
+        _mobile = userData['mobile'] ?? '';
+        notifyListeners();
+        return true;
+      } else {
+        print("User data does not exist in Firestore for UID: $uid");
+        return false;
+      }
+    } catch (error) {
+      print("Error in login: $error");
       return false;
     }
-  } catch (error) {
-    print("Error in login: $error");
-    return false;
   }
-}
 
   void logout() async {
     try {

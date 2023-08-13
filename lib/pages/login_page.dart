@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'signup_page.dart';
 import 'user_profile.dart';
-import '../store/user.dart'; 
+import '../store/user.dart';
+import '../store/quiz.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -12,12 +13,12 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  
+
   bool _isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
-    UserStore userStore = Provider.of<UserStore>(context); 
+    UserStore userStore = Provider.of<UserStore>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -59,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                _handleLogin(userStore); 
+                _handleLogin(userStore);
               },
               child: Text('Login'),
             ),
@@ -86,6 +87,9 @@ class _LoginPageState extends State<LoginPage> {
 
     // Check if the entered email and password match a registered user
     if (await userStore.login(enteredEmail, enteredPassword)) {
+      // Fetch and store topics
+      final quizStore = Provider.of<QuizStore>(context, listen: false);
+      await quizStore.fetchQuizTopics();
       // Successful login, navigate to the home page.
       Navigator.pushReplacement(
         context,

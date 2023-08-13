@@ -1,18 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../database/quiz.dart';
 
 class QuizStore with ChangeNotifier {
   int _currentQuestionIndex = 0;
-  List<Map<String, dynamic>> quizTopics = quizTopicsInfo;
+  List<Map<String, dynamic>> quizTopics = [];
   int get currentQuestionIndex => _currentQuestionIndex;
   List<Map<String, dynamic>> userQuizResponse = quizResponse;
 
-  Map<String, dynamic> getQuestionAndOptionsForTopic(String topic) {
-    List<Map<String, dynamic>> questions = quizQuestions.firstWhere(
-      (topicData) => topicData['topic'] == topic,
-      orElse: () => {},
-    )['questions'];
+  Future<void> fetchQuizTopics() async {
+    try {
+      print('wwwwwwwww');
+      QuerySnapshot topicSnapshot =
+          await FirebaseFirestore.instance.collection('topics').get();
+      quizTopics = topicSnapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
+          print('qqqqqq');
+          print(quizTopics);
+             notifyListeners(); 
+    } catch (error) {
+      print("Error while fetching topics");
+    }
+  }
+
+  Future<Map<String, dynamic>> getQuestionAndOptionsForTopic(
+      String topic) async {
+    //Fetch questions according to topic from Firebase Database
+    QuerySnapshot questionsSnapshot = await FirebaseFirestore.instance
+        .collection('questions')
+        .where('topic', isEqualTo: topic)
+        .get();
+    List<Map<String, dynamic>> questionsData = questionsSnapshot.docs
+        .map((doc) => doc.data() as Map<String, dynamic>)
+        .toList();
+
+    var questions = questionsData[0]['questions'];
 
     Map<String, dynamic>? currentTopic = quizTopics.firstWhere(
       (topicData) => topicData['topic'] == topic,
@@ -47,14 +71,14 @@ class QuizStore with ChangeNotifier {
 
   void nextQuestion() {
     _currentQuestionIndex++;
-    notifyListeners(); 
+    notifyListeners();
   }
 
   void onFinish() {
     _currentQuestionIndex = 0;
   }
 
-  void addResponse(response) {    
+  void addResponse(response) {
     userQuizResponse.add(response);
   }
 }

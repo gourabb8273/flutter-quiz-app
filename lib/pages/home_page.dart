@@ -13,9 +13,9 @@ class TabNavigationPage extends StatelessWidget {
             Container(
               color: Colors.orange[400], 
               child: TabBar(
-                indicatorColor: Color.fromARGB(255, 26, 25, 25), // Color of the selected tab indicator
-                labelColor: const Color.fromARGB(255, 0, 0, 0), // Color of the selected tab label text
-                unselectedLabelColor: Color.fromARGB(255, 39, 35, 35), // Color of the unselected tab label text
+                indicatorColor: Color.fromARGB(255, 26, 25, 25), 
+                labelColor: const Color.fromARGB(255, 0, 0, 0), 
+                unselectedLabelColor: Color.fromARGB(255, 39, 35, 35),
                 tabs: [
                   Tab(
                     text: 'Quiz',

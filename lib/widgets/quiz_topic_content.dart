@@ -4,7 +4,7 @@ import './quiz_question.dart';
 class QuizTopicWidget extends StatelessWidget {
   final String topic;
   final int numberOfQuestions;
-  final List<String> difficultyLevels;
+  final String difficultyLevels;
   final int passMarksPercentage;
   final String logoPath;
 
@@ -18,7 +18,7 @@ class QuizTopicWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(    
+    return GestureDetector(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 14.0, vertical: 3),
         child: Container(
@@ -93,17 +93,19 @@ class QuizTopicWidget extends StatelessWidget {
                     Wrap(
                       spacing: 8.0,
                       runSpacing: 4.0,
-                      children: difficultyLevels.map((level) {
-                        return Chip(
-                          label: Text(
-                            level,
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 255, 255, 255)),
+                      children: [
+                        for (String level in difficultyLevels.split(','))
+                          Chip(
+                            label: Text(
+                              level.trim(),
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 255, 255, 255),
+                              ),
+                            ),
+                            backgroundColor:
+                                const Color.fromARGB(255, 46, 146, 49),
                           ),
-                          backgroundColor:
-                              const Color.fromARGB(255, 46, 146, 49),
-                        );
-                      }).toList(),
+                      ],
                     ),
                   ],
                 ),

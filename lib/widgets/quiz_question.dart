@@ -20,23 +20,38 @@ class _QuizQuestionWidgetState extends State<QuizQuestionWidget> {
   Widget build(BuildContext context) {
     return Consumer<QuizStore>(
       builder: (context, quizStore, _) {
-        Map<String, dynamic> questionData =
-            quizStore.getQuestionAndOptionsForTopic(widget.topic);
-        String question = questionData['question'];
-        List<String> options = questionData['options'];
-        bool isLastQuestion = questionData['isLastQuestion'];
-        int total = questionData['total'];
-        int correctOptionIndex = questionData['correctOptionIndex'];
-        int passMarksPercentage = questionData['passMarksPercentage'];
+        return FutureBuilder<Map<String, dynamic>>(
+          future: quizStore.getQuestionAndOptionsForTopic(widget.topic),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // Handle loading state if needed
+              return CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              // Handle error state if needed
+              return Text('Error loading question');
+            } else if (!snapshot.hasData) {
+              // Handle no data state if needed
+              return Text('No question data');
+            }
 
-        return _QuizQuestionContent(
-          topic: widget.topic,
-          question: question,
-          options: options,
-          total: total,
-          correctOptionIndex: correctOptionIndex,
-          isLastQuestion: isLastQuestion,
-          passMarksPercentage: passMarksPercentage,
+            Map<String, dynamic> questionData = snapshot.data!;
+            String question = questionData['question'];
+            List<String> options = questionData['options'];
+            bool isLastQuestion = questionData['isLastQuestion'];
+            int total = questionData['total'];
+            int correctOptionIndex = questionData['correctOptionIndex'];
+            int passMarksPercentage = questionData['passMarksPercentage'];
+
+            return _QuizQuestionContent(
+              topic: widget.topic,
+              question: question,
+              options: options,
+              total: total,
+              correctOptionIndex: correctOptionIndex,
+              isLastQuestion: isLastQuestion,
+              passMarksPercentage: passMarksPercentage,
+            );
+          },
         );
       },
     );

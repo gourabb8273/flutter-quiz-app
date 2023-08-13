@@ -29,8 +29,7 @@ class _QuizTabState extends State<QuizTab> {
                 child: QuizTopicWidget(
                   topic: topicData['topic'],
                   numberOfQuestions: topicData['numberOfQuestions'],
-                  difficultyLevels:
-                      List<String>.from(topicData['difficultyLevels']),
+                  difficultyLevels: topicData['difficultyLevels'],
                   passMarksPercentage: topicData['passMarksPercentage'],
                   logoPath: topicData['logoPath'],
                 ),

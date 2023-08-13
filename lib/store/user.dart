@@ -8,12 +8,18 @@ class UserStore with ChangeNotifier {
   String _name = '';
   String _password = '';
   String _mobile = '';
+  String _uid = '';
+  int _correctAnswerCount = 0;
+  List<Map<String, dynamic>> _userQuizResponse = [];
 
   bool get isLoggedIn => _isLoggedIn;
   String get email => _email;
   String get password => _password;
   String get name => _name;
   String get mobile => _mobile;
+  String get uid => _uid;
+  int get correctAnswerCount => _correctAnswerCount;
+  List<Map<String, dynamic>> get userQuizResponse => _userQuizResponse;
 
   void register(
       String name, String email, String mobile, String password) async {
@@ -62,6 +68,16 @@ class UserStore with ChangeNotifier {
         _email = userData['email'] ?? '';
         _name = userData['name'] ?? '';
         _mobile = userData['mobile'] ?? '';
+        _uid = userData['firebaseAuthId'] ?? '';
+        //Get quiz result for unique user
+        QuerySnapshot resultSnapshot = await FirebaseFirestore.instance
+            .collection('result')
+            .where('uid', isEqualTo: userData['firebaseAuthId'])
+            .get();
+        List<Map<String, dynamic>> result = resultSnapshot.docs
+            .map((doc) => doc.data() as Map<String, dynamic>)
+            .toList();
+        _userQuizResponse = result;
         notifyListeners();
         return true;
       } else {
@@ -83,5 +99,28 @@ class UserStore with ChangeNotifier {
     } catch (error) {
       print("Error while signing out: $error");
     }
+  }
+
+  Future<void> addResponse(response) async {
+    try {
+      userQuizResponse.add(response);
+      print("response   $response");
+      //Adding to database
+      await FirebaseFirestore.instance.collection('result').add({
+        ...response,
+        'uid': uid, // Include the UID in the document data
+      });
+      notifyListeners();
+    } catch (error) {
+      print("Error while adding quiz result: $error");
+    }
+  }
+
+  void getCorrectAnswer() {
+    _correctAnswerCount++;
+  }
+
+  void resetCorrectAnewer() {
+    _correctAnswerCount = 0;
   }
 }

@@ -89,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
     if (await userStore.login(enteredEmail, enteredPassword)) {
       // Fetch and store topics
       final quizStore = Provider.of<QuizStore>(context, listen: false);
-      await quizStore.fetchQuizTopics();
+      await quizStore.fetchQuizTopics();    
       // Successful login, navigate to the home page.
       Navigator.pushReplacement(
         context,

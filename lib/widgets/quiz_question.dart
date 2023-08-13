@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quiz_app/store/user.dart';
 import '../store/quiz.dart';
+import '../store/user.dart';
 import './quiz_tab.dart';
 import 'package:intl/intl.dart';
 
@@ -83,11 +85,11 @@ class _QuizQuestionContent extends StatefulWidget {
 
 class _QuizQuestionContentState extends State<_QuizQuestionContent> {
   int? selectedOptionIndex;
-  int totalMarks = 0;
 
   @override
   Widget build(BuildContext context) {
     QuizStore quizStore = Provider.of<QuizStore>(context);
+    UserStore userStore = Provider.of<UserStore>(context);
     return Center(
       child: Card(
         margin: EdgeInsets.all(4),
@@ -98,11 +100,10 @@ class _QuizQuestionContentState extends State<_QuizQuestionContent> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Container(
-                padding: EdgeInsets.all(8.0), 
+                padding: EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
                   color: Color.fromARGB(255, 78, 70, 57),
-                  borderRadius:
-                      BorderRadius.circular(8.0), 
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Text(
                   "Quiz on ${widget.topic}",
@@ -160,9 +161,9 @@ class _QuizQuestionContentState extends State<_QuizQuestionContent> {
               SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
-                  if (selectedOptionIndex != null) {                
+                  if (selectedOptionIndex != null) {
                     if (selectedOptionIndex == widget.correctOptionIndex - 1) {
-                      totalMarks += 1;
+                      userStore.getCorrectAnswer();
                     }
                     if (!widget.isLastQuestion) {
                       quizStore.nextQuestion();
@@ -170,15 +171,17 @@ class _QuizQuestionContentState extends State<_QuizQuestionContent> {
                     } else {
                       String currentDate =
                           DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now());
-                      quizStore.onFinish();                   
-                      quizStore.addResponse({
+                      quizStore.onFinish();
+                      userStore.addResponse({
                         'topic': widget.topic,
-                        'percentage': (totalMarks / widget.total * 100)
-                            .toStringAsFixed(2),
+                        'percentage':
+                            (userStore.correctAnswerCount / widget.total * 100)
+                                .toStringAsFixed(2),
                         'date': currentDate,
                         'isPass': widget.passMarksPercentage <=
-                            (totalMarks / widget.total * 100),
+                            (userStore.correctAnswerCount / widget.total * 100),
                       });
+                      userStore.resetCorrectAnewer();
                       Navigator.pop(context);
                     }
                   }

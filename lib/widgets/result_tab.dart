@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'quiz_topic_content.dart';
-import '../store/quiz.dart';
+import '../store/user.dart';
+import 'package:provider/provider.dart';
 
 class ResultTab extends StatelessWidget {
-  final quizResponse = QuizStore().userQuizResponse;
-
   @override
   Widget build(BuildContext context) {
+    final quizResponse =
+        Provider.of<UserStore>(context, listen: false).userQuizResponse;
+    // Sort quizResponse list by date
+    quizResponse.sort((a, b) {
+      DateTime dateA = DateTime.parse(a['date']);
+      DateTime dateB = DateTime.parse(b['date']);
+      return dateB.compareTo(dateA);
+    });
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(0),
@@ -18,7 +25,7 @@ class ResultTab extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              for (var details in quizResponse)
+              for (var result in quizResponse)
                 Container(
                   padding: EdgeInsets.all(16),
                   margin: EdgeInsets.only(bottom: 16),
@@ -33,7 +40,7 @@ class ResultTab extends StatelessWidget {
                         width: 50,
                         height: 50,
                         child: CircularProgressIndicator(
-                          value: double.parse(details['percentage']) / 100,
+                          value: double.parse(result['percentage']) / 100,
                           strokeWidth: 5,
                           backgroundColor: Colors.grey.shade300,
                           valueColor:
@@ -45,16 +52,16 @@ class ResultTab extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${details['topic']}',
+                            '${result['topic']}',
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            'Percentage: ${details['percentage']}%',
+                            'Percentage: ${result['percentage']}%',
                             style: TextStyle(fontSize: 15),
                           ),
                           Text(
-                            'Attempted on ${details['date']}',
+                            'Attempted on ${result['date']}',
                             style: TextStyle(fontSize: 14),
                           ),
                         ],
@@ -63,11 +70,11 @@ class ResultTab extends StatelessWidget {
                         padding:
                             EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: details['isPass'] ? Colors.green : Colors.red,
+                          color: result['isPass'] ? Colors.green : Colors.red,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          details['isPass'] ? 'Pass' : 'Fail',
+                          result['isPass'] ? 'Pass' : 'Fail',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),

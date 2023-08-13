@@ -1,25 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../database/quiz.dart';
 
 class QuizStore with ChangeNotifier {
   int _currentQuestionIndex = 0;
   List<Map<String, dynamic>> quizTopics = [];
   int get currentQuestionIndex => _currentQuestionIndex;
-  List<Map<String, dynamic>> userQuizResponse = quizResponse;
 
   Future<void> fetchQuizTopics() async {
     try {
-      print('wwwwwwwww');
       QuerySnapshot topicSnapshot =
           await FirebaseFirestore.instance.collection('topics').get();
       quizTopics = topicSnapshot.docs
           .map((doc) => doc.data() as Map<String, dynamic>)
           .toList();
-          print('qqqqqq');
-          print(quizTopics);
-             notifyListeners(); 
+      notifyListeners();
     } catch (error) {
       print("Error while fetching topics");
     }
@@ -69,6 +64,21 @@ class QuizStore with ChangeNotifier {
     };
   }
 
+  Future<void> fetchQuizResult(String uid) async {
+    try {
+      //Get quiz result for unique user
+      QuerySnapshot resultSnapshot = await FirebaseFirestore.instance
+          .collection('result')
+          .where('uid', isEqualTo: uid)
+          .get();
+      List<Map<String, dynamic>> result = resultSnapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
+    } catch (error) {
+      print("Error fetching quiz result $error");
+    }
+  }
+
   void nextQuestion() {
     _currentQuestionIndex++;
     notifyListeners();
@@ -76,9 +86,5 @@ class QuizStore with ChangeNotifier {
 
   void onFinish() {
     _currentQuestionIndex = 0;
-  }
-
-  void addResponse(response) {
-    userQuizResponse.add(response);
   }
 }

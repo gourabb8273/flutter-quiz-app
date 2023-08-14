@@ -108,7 +108,7 @@ class UserStore with ChangeNotifier {
       //Adding to database
       await FirebaseFirestore.instance.collection('result').add({
         ...response,
-        'uid': uid, // Include the UID in the document data
+        'uid': uid, 
       });
       notifyListeners();
     } catch (error) {

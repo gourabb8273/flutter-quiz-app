@@ -27,7 +27,7 @@ class ResultTab extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 10), // Add top margin
+              SizedBox(height: 10), 
               if (quizResponse.isEmpty)
                 Container(
                   alignment: Alignment.center,

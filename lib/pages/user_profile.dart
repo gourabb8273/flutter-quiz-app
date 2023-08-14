@@ -13,7 +13,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
-    UserStore userStore = Provider.of<UserStore>(context); 
+    UserStore userStore = Provider.of<UserStore>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -50,20 +50,32 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                         SizedBox(height: 4.0),
-                        Text(
-                          userStore.email,
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 0, 0, 0),
-                            fontSize: 16.0,
-                          ),
+                        Row(
+                          children: [
+                            Icon(Icons.email, size: 16.0),
+                            SizedBox(width: 4.0),
+                            Text(
+                              userStore.email,
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 0, 0, 0),
+                                fontSize: 16.0,
+                              ),
+                            ),
+                          ],
                         ),
                         SizedBox(height: 4.0),
-                        Text(
-                          userStore.mobile,
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 0, 0, 0),
-                            fontSize: 16.0,
-                          ),
+                        Row(
+                          children: [
+                            Icon(Icons.phone, size: 16.0),
+                            SizedBox(width: 4.0),
+                            Text(
+                              userStore.mobile,
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 0, 0, 0),
+                                fontSize: 16.0,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -72,7 +84,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.contact_mail),
+              leading: Icon(Icons.phone),
               title: Text('Contact Us'),
               onTap: () {
                 Navigator.pop(context);
@@ -86,7 +98,7 @@ class _ProfilePageState extends State<ProfilePage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.info),
+              leading: Icon(Icons.logout),
               title: Text('Log Out'),
               onTap: () {
                 userStore.logout();

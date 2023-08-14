@@ -183,6 +183,14 @@ class _QuizQuestionContentState extends State<_QuizQuestionContent> {
                       });
                       userStore.resetCorrectAnewer();
                       Navigator.pop(context);
+
+                      // Show a notification after quiz is submitted
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                              'Quiz submitted successfully. Check your score in the Result section.'),
+                        ),
+                      );
                     }
                   }
                 },
